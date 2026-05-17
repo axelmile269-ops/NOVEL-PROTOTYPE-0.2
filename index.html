@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAZZBUNNY Entertainment — Game 3 Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080a0e;
+    --surface: #0d1017;
+    --surface2: #111520;
+    --border: rgba(255,255,255,0.07);
+    --accent: #a8c4e0;
+    --accent2: #e0c4a8;
+    --text: #d4cfc8;
+    --text-muted: #6b7280;
+    --text-dim: #3d4350;
+    --lumi: #7eb8d4;
+    --soren: #c9b99a;
+    --elton: #8a9bb0;
+    --scene: #4a5568;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    line-height: 1.85;
+    min-height: 100vh;
+  }
+
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, rgba(126,184,212,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cover-eyebrow {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+  }
+
+  .cover-studio {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0.7;
+  }
+
+  .cover-title {
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+
+  .cover-subtitle {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.4em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 4rem;
+  }
+
+  .cover-tagline {
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 5rem;
+  }
+
+  .cover-divider {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--border), transparent);
+    margin: 0 auto 3rem;
+  }
+
+  .cover-meta {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    line-height: 2;
+  }
+
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 5rem 2.5rem;
+  }
+
+  .chapter-break {
+    text-align: center;
+    padding: 6rem 2rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 5rem 0;
+  }
+
+  .chapter-num {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .chapter-title {
+    font-size: 2.2rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+
+  .chapter-sub {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+
+  .scene-header {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    color: var(--scene);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .scene-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .prose {
+    color: var(--text);
+    margin-bottom: 1.8rem;
+    font-size: 1.05rem;
+  }
+
+  .prose.atmospheric {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.98rem;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--border);
+    margin: 2.5rem 0;
+  }
+
+  .dialogue-block {
+    margin: 2.5rem 0;
+  }
+
+  .speaker {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .speaker.soren { color: var(--soren); }
+  .speaker.lumi { color: var(--lumi); }
+  .speaker.elton { color: var(--elton); }
+  .speaker.system { color: var(--text-dim); }
+
+  .line {
+    font-size: 1.1rem;
+    color: #e8e4de;
+    padding-left: 1rem;
+    line-height: 1.75;
+  }
+
+  .direction {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding-left: 1rem;
+    margin-top: 0.3rem;
+  }
+
+  .visual-note {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 1.2rem 1.5rem;
+    margin: 2.5rem 0;
+    font-size: 0.88rem;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+    line-height: 1.7;
+  }
+
+  .visual-note span {
+    display: block;
+    color: var(--accent);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 3.5rem 0;
+    color: var(--text-dim);
+  }
+
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section-divider-sym {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+  }
+
+  .lumi-appear {
+    background: linear-gradient(135deg, rgba(126,184,212,0.04), transparent);
+    border: 1px solid rgba(126,184,212,0.12);
+    border-radius: 4px;
+    padding: 2rem;
+    margin: 2.5rem 0;
+  }
+
+  .ending-block {
+    text-align: center;
+    padding: 5rem 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .ending-title {
+    font-size: 1.8rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: #fff;
+    margin-bottom: 1.5rem;
+  }
+
+  .ending-text {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 1rem;
+    max-width: 480px;
+    margin: 0 auto 3rem;
+    line-height: 1.9;
+  }
+
+  .blackscreen {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.5em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-top: 3rem;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 4rem 2rem 6rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-logo {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .footer-note {
+    margin-top: 1rem;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  @media print {
+    body { background: #fff; color: #111; }
+    .cover { min-height: auto; padding: 3rem 2rem; }
+    .chapter-break { page-break-before: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-eyebrow">Fazzbunny Entertainment™ — Prototype Story Document</div>
+  <div class="cover-studio">Game 3 — Untitled</div>
+  <h1 class="cover-title">SOREN</h1>
+  <div class="cover-subtitle">A Story About What Remains</div>
+  <p class="cover-tagline">"Human civilization failed.<br>But emotional connection survived."</p>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    Characters: Soren Kai · Lumi · Elton Mori<br>
+    Classification: Emotional Sci-Fi Adventure<br>
+    Universe: Fazzbunny Entertainment™<br>
+    Timeline: Far-future — Post-Collapse Era
+  </div>
+</div>
+
+<!-- CHAPTER 1 -->
+<div class="page">
+
+  <div class="chapter-break">
+    <div class="chapter-num">Chapter One</div>
+    <h2 class="chapter-title">The Dome</h2>
+    <div class="chapter-sub">Everything you see was built for you.</div>
+  </div>
+
+  <div class="scene-header">Scene 001 — Interior — City District — Morning</div>
+
+  <div class="visual-note">
+    <span>Visual Direction</span>
+    The city is breathtaking. Wide, clean streets. Holographic sky shifts slowly from deep violet to gold — a perfect simulated sunrise. Children walk to school. Market stalls open. Everything feels warm, designed, impossibly beautiful. There is no noise pollution. No poverty. No decay. It is a world that feels too good. Too controlled.
+  </div>
+
+  <p class="prose">
+    The city has no name in school textbooks. People simply call it Home.
+  </p>
+
+  <p class="prose">
+    Streets are wide and white. The sky — a seamless projection — glows soft amber at this hour, the automated sunrise cycling through its daily sequence. Somewhere above the dome's interior surface, tiny climate emitters release a gentle warmth.
+  </p>
+
+  <p class="prose atmospheric">
+    Nobody questions the sky. Nobody wonders if it is real. It has always been there. It has always been enough.
+  </p>
+
+  <div class="section-divider"><div class="section-divider-sym">◆</div></div>
+
+  <div class="scene-header">Scene 002 — Interior — Soren's Room — Early Morning</div>
+
+  <p class="prose">
+    Soren Kai is seventeen years old. He wakes up the same way he has for as long as he can remember — to the soft chime of the city's automated morning signal, a sound so familiar it barely registers as sound anymore.
+  </p>
+
+  <p class="prose">
+    His room is modest for someone whose father runs the city. That was Soren's choice. He never liked the idea that things should be given. He liked earning them. Understanding them. Taking them apart to see how they worked.
+  </p>
+
+  <p class="prose">
+    On his desk: scattered engineering sketches. Half-assembled mechanical components. A small photograph — a family photo — that he keeps face-down.
+  </p>
+
+  <p class="prose atmospheric">
+    He has never asked why the photo bothers him. He simply learned to leave it down.
+  </p>
+
+  <div class="section-divider"><div class="section-divider-sym">◆</div></div>
+
+  <div class="scene-header">Scene 003 — Interior — Breakfast — Morning</div>
+
+  <p class="prose">
+    The house AI announces that his father has already left for the facility. As usual. Soren eats alone.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker system">House System</div>
+    <div class="line">"Director Mori departed at 04:22. He left no message."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"He never does."</div>
+    <div class="direction">He says it quietly. Not with anger. More like a fact he stopped fighting a long time ago.</div>
+  </div>
+
+  <p class="prose">
+    Soren finishes eating and leaves the house. Outside, the city is already alive with the gentle rhythm of people who have never questioned why their world is so perfect.
+  </p>
+
+</div>
+
+<!-- CHAPTER 2 -->
+<div class="page">
+
+  <div class="chapter-break">
+    <div class="chapter-num">Chapter Two</div>
+    <h2 class="chapter-title">Lockdown</h2>
+    <div class="chapter-sub">The city does not panic. It simply... stops.</div>
+  </div>
+
+  <div class="scene-header">Scene 004 — Exterior — City Center — Midday</div>
+
+  <p class="prose">
+    The emergency signal comes at 12:14.
+  </p>
+
+  <p class="prose">
+    It is a sound no one in the dome has heard before — not in Soren's lifetime, not in anyone's — because emergencies do not happen here. The city was built to prevent emergencies.
+  </p>
+
+  <div class="visual-note">
+    <span>Visual Direction</span>
+    The holographic sky flickers. Just once. It is barely noticeable — a half-second stutter in the projection — but Soren sees it. Around him, people stop walking and look up. The warmth in the air feels suddenly thin.
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker system">City Broadcast</div>
+    <div class="line">"Attention. This is an automated security notice. Sector 4 administrative facilities are entering precautionary lockdown. Please remain calm. Please remain in designated zones. This is not a drill."</div>
+  </div>
+
+  <p class="prose atmospheric">
+    The broadcast ends. The city stays quiet for a moment — that particular quiet that happens before people decide how to feel.
+  </p>
+
+  <p class="prose">
+    Then Soren's communicator vibrates. A single message from an unknown internal system ID.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker system">Unknown ID — 12:14:38</div>
+    <div class="line">"Director Mori has not been located. Facility security is non-responsive. Personnel advised not to approach Sector 4."</div>
+  </div>
+
+  <p class="prose">
+    Soren reads it twice.
+  </p>
+
+  <p class="prose">
+    Then he runs.
+  </p>
+
+  <div class="section-divider"><div class="section-divider-sym">◆</div></div>
+
+  <div class="scene-header">Scene 005 — Exterior — Streets — Running</div>
+
+  <p class="prose">
+    The city begins to behave strangely as Soren moves through it. Not dramatically — just subtly wrong. Like a machine that has been asked to do something it was not designed for.
+  </p>
+
+  <p class="prose">
+    Security drones hover at intersections that are normally unwatched. Side streets are sealed with retractable barriers that Soren has never seen deployed before. The holographic sky above has returned to its normal amber glow but now it feels less like warmth and more like something being maintained.
+  </p>
+
+  <p class="prose atmospheric">
+    Everything is fine, the city seems to say. Everything is exactly as it should be. Please do not look too closely.
+  </p>
+
+  <p class="prose">
+    Soren keeps running.
+  </p>
+
+  <div class="section-divider"><div class="section-divider-sym">◆</div></div>
+
+  <div class="scene-header">Scene 006 — Exterior — Central Bridge — Afternoon</div>
+
+  <p class="prose">
+    He stops at the bridge connecting the residential district to Sector 4.
+  </p>
+
+  <p class="prose">
+    The bridge is sealed. Not with drones or guards — just a clean white barrier panel, no explanation, no override option. Soren presses his access ID against the panel. It flashes red once. Then the screen goes dark.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"That's my father's facility. My ID should work anywhere in this city."</div>
+    <div class="direction">He says it to no one. He is alone on the bridge. The wind — which is artificial, generated by circulation systems — moves through his hair. Below the bridge: the decorative waterway that runs through the city's center district. The water is also artificial. Everything here is artificial. He has simply never thought about it before.</div>
+  </div>
+
+</div>
+
+<!-- CHAPTER 3 -->
+<div class="page">
+
+  <div class="chapter-break">
+    <div class="chapter-num">Chapter Three</div>
+    <h2 class="chapter-title">Lumi</h2>
+    <div class="chapter-sub">She has been watching him for a long time.</div>
+  </div>
+
+  <div class="scene-header">Scene 007 — Exterior — Central Bridge — Afternoon</div>
+
+  <div class="lumi-appear">
+
+    <div class="visual-note" style="margin: 0 0 1.5rem; border-left-color: var(--lumi);">
+      <span style="color: var(--lumi);">Visual Direction — Lumi Appears</span>
+      She materializes without announcement. No dramatic light effect. No sound. One moment the bridge railing ahead of Soren is empty. The next moment she is simply there — sitting on it, legs crossed, watching him. She looks around fifteen or sixteen. Her appearance is clean and still, like a photograph that has learned to breathe. Her eyes are slightly too reflective in the light. Everything about her is almost right. Almost.
+    </div>
+
+    <div class="dialogue-block">
+      <div class="speaker lumi">Lumi</div>
+      <div class="line">"You've been running."</div>
+      <div class="direction">Not a question. More like an observation she has been waiting to say out loud.</div>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="speaker soren">Soren</div>
+      <div class="line">"Who are you?"</div>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="speaker lumi">Lumi</div>
+      <div class="line">"I've been here a long time. You just never looked in the right direction."</div>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="speaker soren">Soren</div>
+      <div class="line">"That's not an answer."</div>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="speaker lumi">Lumi</div>
+      <div class="line">"No. It isn't."</div>
+      <div class="direction">She glances toward the sealed barrier. Then back at Soren. Something in her expression is careful. She is choosing what to say the way someone chooses which door to open first.</div>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="speaker lumi">Lumi</div>
+      <div class="line">"Your father isn't in the facility."</div>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="speaker soren">Soren</div>
+      <div class="line">"How do you know that?"</div>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="speaker lumi">Lumi</div>
+      <div class="line">"Because I know most things about this city. And some things about you."</div>
+      <div class="direction">Beat.</div>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="speaker lumi">Lumi</div>
+      <div class="line">"I know you take engineering sketches to bed. I know you keep that photograph face-down because something about it feels wrong and you don't know why. I know you've stood at the edge of the outer district and looked at the dome wall and wondered what's on the other side."</div>
+    </div>
+
+    <p class="prose" style="margin-top: 1.5rem;">
+      Soren stares at her. There is a long silence.
+    </p>
+
+    <div class="dialogue-block">
+      <div class="speaker soren">Soren</div>
+      <div class="line">"There's nothing on the other side. The dome is the boundary of—"</div>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="speaker lumi">Lumi</div>
+      <div class="line">"Soren."</div>
+      <div class="direction">She says his name like she has said it a thousand times before. Like it is familiar in her mouth. She steps down from the railing and walks toward him. Up close, he notices: when her foot touches the ground, there is no weight. No sound. No displacement. She stands in front of him and holds his gaze.</div>
+    </div>
+
+    <div class="dialogue-block">
+      <div class="speaker lumi">Lumi</div>
+      <div class="line">"There is something on the other side."</div>
+    </div>
+
+  </div>
+
+  <div class="section-divider"><div class="section-divider-sym">◆</div></div>
+
+  <div class="scene-header">Scene 008 — Exterior — Outer District — Late Afternoon</div>
+
+  <p class="prose">
+    Lumi leads him through side routes he has never used. Not because they are hidden — they are not. They have always been there. But they lead toward parts of the city that feel quietly discouraged. No signs pointing you away. Just nothing pointing you toward them.
+  </p>
+
+  <p class="prose atmospheric">
+    Designed absence. The city is very good at that.
+  </p>
+
+  <p class="prose">
+    They reach the outer district wall. Here the beautiful architecture of the city's interior gives way to something plainer — a curved structural surface, matte gray, no windows, no decoration. The dome from the inside.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"We've always been told this is the structural outer boundary. That beyond this is—"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"Empty atmospheric pressure. Yes. That's what they teach."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"That's not what's out there?"</div>
+  </div>
+
+  <p class="prose">
+    Lumi looks at him for a long moment. There is something happening in her expression — something that looks almost like grief, the way grief sometimes looks on someone who has known a truth for a very long time and has been waiting for the right moment to share it.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"There is an entire world out there, Soren."</div>
+    <div class="direction">Quiet. Steady.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"It's broken. It's dangerous. Most of it is unrecognizable. But it exists."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"And your father built this dome to keep you from ever finding it."</div>
+  </div>
+
+  <p class="prose atmospheric">
+    The artificial wind passes through the outer district. Above them, the holographic sky begins its early evening sequence — deep blue softening toward dark. It is beautiful. It has always been beautiful. Now it feels like a painting hung over a window.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"Why?"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"Because he loves you."</div>
+    <div class="direction">A pause. Then, softer —</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"And because he's afraid of what you'll understand when you see it."</div>
+  </div>
+
+</div>
+
+<!-- ENDING OF PROTOTYPE -->
+<div class="page">
+
+  <div class="ending-block">
+    <div class="chapter-num" style="margin-bottom: 1.5rem;">End of Prototype — Chapter One–Three</div>
+    <h2 class="ending-title">What Comes Next</h2>
+    <p class="ending-text">
+      Soren leaves the dome for the first time.<br><br>
+      He finds a world he was never supposed to see — ruined, vast, and full of people who survived what the city pretended never happened.<br><br>
+      And slowly, question by question, truth by truth, he begins to understand what his father built.<br><br>
+      And what his father is.<br><br>
+      And what he himself is.
+    </p>
+
+    <div class="section-divider" style="max-width: 300px; margin: 0 auto 3rem;"><div class="section-divider-sym">◆</div></div>
+
+    <p class="ending-text" style="font-size: 0.88rem; color: var(--text-dim);">
+      "The father did not build the dome because the world outside was dangerous.<br>
+      He built it because he could not bear to lose something again."
+    </p>
+
+    <div class="blackscreen">— Black Screen —</div>
+  </div>
+
+</div>
+
+<!-- CHAPTER 4 -->
+<div class="page">
+
+  <div class="chapter-break">
+    <div class="chapter-num">Chapter Four</div>
+    <h2 class="chapter-title">The Other Side</h2>
+    <div class="chapter-sub">He had always imagined it. Nothing prepared him.</div>
+  </div>
+
+  <div class="scene-header">Scene 009 — Exterior — Dome Wall Access Tunnel — Night</div>
+
+  <p class="prose">
+    Lumi knows a way through.
+  </p>
+
+  <p class="prose">
+    Not a door. Not a gate. A maintenance access point — a narrow service corridor built into the dome's lower structural layer, designed for external repair crews that haven't existed in decades. The passage is dark and smells of old metal and something else Soren cannot name. Something cold and unfamiliar.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"How do you know about this?"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"Your father built this dome. I know everything he built."</div>
+    <div class="direction">She moves through the corridor without hesitation. Without sound. Soren follows, running his hand along the curved wall — the real wall, not the decorated inner surface — and feeling for the first time how thick it is. How deliberate. How much effort went into keeping whatever is on the other side from being seen.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"If there's a whole world out there — why doesn't anyone inside know?"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"They do know. Or they did, once. The first generation remembered. But memory fades. And the dome is very good at replacing what fades with something more comfortable."</div>
+  </div>
+
+  <p class="prose atmospheric">
+    They reach the end of the corridor. A heavy pressure seal. Manual release. No electronic lock — because whoever built this exit never imagined someone would want to use it from the inside.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"Soren."</div>
+    <div class="direction">She turns to face him. In the narrow corridor light she looks more like herself — or more like what she is. The slight luminance at the edges of her form. The way shadows don't quite fall on her the way they should.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"What you're about to see — it isn't a nightmare. It's just real. And real things are harder than nightmares because you can't wake up from them."</div>
+  </div>
+
+  <p class="prose">
+    Soren looks at the seal. Then back at her.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"Is my father out there?"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"I think so."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"Then let's go."</div>
+  </div>
+
+  <p class="prose">
+    He pulls the manual release. The seal breaks with a sound like the world exhaling.
+  </p>
+
+  <div class="section-divider"><div class="section-divider-sym">◆</div></div>
+
+  <div class="scene-header">Scene 010 — Exterior — Outside the Dome — Night</div>
+
+  <div class="visual-note">
+    <span>Visual Direction — First Look Outside</span>
+    This is the most important visual moment in the story. The camera — the player's eyes — steps through the threshold and sees the outside world for the first time. No dramatic music yet. Just silence. And then: the sky. The real sky. Dark. Enormous. Full of stars that move the way stars are supposed to move — slowly, without a program telling them where to be. The air is cold and carries dust. And ahead, stretching far beyond what the dome's streets ever allowed the eye to travel — ruins. Beautiful, terrible ruins.
+  </div>
+
+  <p class="prose">
+    Soren doesn't move for a long time.
+  </p>
+
+  <p class="prose">
+    The sky above him is real. He knows immediately — not from being told — but because it does not feel designed. It does not feel like something built to comfort him. It is vast and indifferent and extraordinary.
+  </p>
+
+  <p class="prose atmospheric">
+    The dome behind him glows faintly — a soft amber warmth bleeding through its outer surface. From the outside it looks smaller than it felt from within. A circle of light in the middle of a dead world.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"How big is this?"</div>
+    <div class="direction">He means the outside. He means everything.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"What's left of it — about the size of a continent. Maybe more. I've never reached the edges."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"What happened to it?"</div>
+  </div>
+
+  <p class="prose">
+    Lumi is quiet for a moment. The wind moves across the wasteland — real wind, uncontrolled, carrying the smell of ash and old earth.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"People happened to it. And then people tried to save themselves from what people had done to it. And in the process of saving themselves — they finished what they started."</div>
+  </div>
+
+  <p class="prose">
+    Soren stares out at the ruins of the world. The bones of cities. The skeletons of structures that were once enormous and are now only shapes against the dark horizon.
+  </p>
+
+  <p class="prose atmospheric">
+    Somewhere out in the darkness, something moves. Far away. Too far to identify. Soren watches it until it disappears.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"Are there people out here?"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"Yes."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"Real people?"</div>
+  </div>
+
+  <p class="prose">
+    A pause. The kind of pause that means the answer is complicated.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"Some of them."</div>
+  </div>
+
+</div>
+
+<!-- CHAPTER 5 -->
+<div class="page">
+
+  <div class="chapter-break">
+    <div class="chapter-num">Chapter Five</div>
+    <h2 class="chapter-title">What Remained</h2>
+    <div class="chapter-sub">They survived. That was the most they could say about it.</div>
+  </div>
+
+  <div class="scene-header">Scene 011 — Exterior — Wasteland — Dawn</div>
+
+  <p class="prose">
+    They move through the ruins as the real sun rises for the first time over Soren's horizon.
+  </p>
+
+  <p class="prose">
+    He watches it happen — the slow, unscheduled arrival of actual light — and understands instinctively why the dome's simulated sunrise always felt slightly wrong. The real thing doesn't perform. It simply occurs. Color spreading across the ash-grey sky without asking permission, without a system deciding when it should begin.
+  </p>
+
+  <p class="prose atmospheric">
+    It is the most honest thing he has ever seen.
+  </p>
+
+  <div class="visual-note">
+    <span>Visual Direction — Wasteland Landscape</span>
+    The ruins are not ugly. That is the unexpected thing. Collapsed towers with vegetation growing through them. Old streets buried under decades of earth and dust, reclaimed by something quiet and persistent. There is destruction here — absolute and total — but also time. Time has softened everything. The world outside the dome is dead, but it has been dead long enough to start becoming something else.
+  </div>
+
+  <p class="prose">
+    They find the camp before midday.
+  </p>
+
+  <div class="section-divider"><div class="section-divider-sym">◆</div></div>
+
+  <div class="scene-header">Scene 012 — Exterior — Survivor Camp — Morning</div>
+
+  <p class="prose">
+    It is built inside the shell of what was once a large building — the outer walls still standing, roof mostly gone, the interior filled with makeshift structures and salvaged materials. Twenty, maybe thirty people. They look at Soren the moment he steps into view.
+  </p>
+
+  <p class="prose atmospheric">
+    They look at him the way people look at something they were not expecting. Not with fear. With recognition. Like they know what he is before he does.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"They're staring at me."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"You're from the dome. They can always tell."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"How?"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"The way you walk. The way you look at things. People from the dome look at the world like it owes them an explanation."</div>
+    <div class="direction">Beat.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"People out here stopped expecting explanations a long time ago."</div>
+  </div>
+
+  <p class="prose">
+    An older man approaches. Weather-worn. Eyes that carry the specific kind of tiredness that doesn't come from lack of sleep but from surviving things that should not have been survived. He looks at Soren without warmth but also without hostility.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"I'm looking for someone. A man — older, engineer, gray hair. He would have come from the dome recently—"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker system">Survivor — Name Unknown</div>
+    <div class="line">"The builder."</div>
+    <div class="direction">Flat. Like he's used the word before and it always means something complicated.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"You know him?"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker system">Survivor</div>
+    <div class="line">"Everyone out here knows who built the dome. We've been living in its shadow for as long as it's been standing."</div>
+    <div class="direction">He looks at Soren carefully. Something shifts in his expression — something that might be pity.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker system">Survivor</div>
+    <div class="line">"You're his boy."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"Yes."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker system">Survivor</div>
+    <div class="line">"Which one?"</div>
+  </div>
+
+  <p class="prose atmospheric">
+    Soren doesn't understand the question. But something in the way the man said it — which one — settles in his chest like cold water. He doesn't ask what it means. Not yet. Some part of him already doesn't want to know.
+  </p>
+
+  <div class="section-divider"><div class="section-divider-sym">◆</div></div>
+
+  <div class="scene-header">Scene 013 — Interior — Survivor Camp — Night</div>
+
+  <p class="prose">
+    That night, Soren sits alone at the edge of the camp. Lumi sits beside him — or appears to. Close enough that he is aware of her presence without being able to feel it.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"What did he mean. Which one."</div>
+    <div class="direction">Not a question. A statement he's been sitting with for hours.</div>
+  </div>
+
+  <p class="prose">
+    Lumi doesn't answer immediately. She looks out at the wasteland. The real stars above them. The distant glow of the dome on the horizon.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"Soren. How much do you remember about being young? Before you were ten?"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"Not much. Most people don't remember—"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"Not most people. You. Specifically. Do you remember anything before you were ten?"</div>
+  </div>
+
+  <p class="prose">
+    He thinks about it. Really thinks. And realizes with a slow, unsettling clarity that he cannot place a single memory before a certain age. Not blurry early memories — nothing. A clean edge. Like a file that begins mid-sentence.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"No."</div>
+    <div class="direction">Quietly.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"I know."</div>
+  </div>
+
+  <p class="prose atmospheric">
+    She doesn't say anything more that night. She doesn't have to. The silence between them holds the shape of a question he isn't ready to ask yet. But it is there. And it will not leave.
+  </p>
+
+</div>
+
+<!-- CHAPTER 6 -->
+<div class="page">
+
+  <div class="chapter-break">
+    <div class="chapter-num">Chapter Six</div>
+    <h2 class="chapter-title">Artificial</h2>
+    <div class="chapter-sub">The city was real. The people inside it — that was a different question.</div>
+  </div>
+
+  <div class="scene-header">Scene 014 — Interior — Dome — Soren Returns Briefly</div>
+
+  <p class="prose">
+    Lumi guides him back inside the dome through the same access point. She says he needs to see something before they go further. He needs to look at the city again — not with the eyes of someone who lives there, but with the eyes of someone who has been outside.
+  </p>
+
+  <p class="prose">
+    It is a different city now.
+  </p>
+
+  <p class="prose atmospheric">
+    Not changed. He is changed. And the city — designed perfectly, maintained immaculately — cannot account for what happens when someone looks at it from the wrong angle.
+  </p>
+
+  <div class="visual-note">
+    <span>Visual Direction — Uncanny Dome</span>
+    The streets look the same. The holographic sky. The warmth. The gentle rhythm of city life. But now Soren notices things. The way people move — slightly too fluid. Too settled. Nobody argues. Nobody is confused. Nobody has a bad day written on their face. Not because they are happy. Because they have been calibrated to present as fine. It is subtle. Almost imperceptible. Like a painting that is technically perfect but has no brushstrokes.
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"They're not right."</div>
+    <div class="direction">He says it almost to himself, watching a group of people pass by. They smile. They nod at each other. Everything correct. Everything exactly as it should be.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"They're not wrong either. They're just — built toward a result."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"What result?"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"Continuation. Your father needed the dome to continue. That required people. People who would not collapse under the weight of what the world had become. So he built people who couldn't."</div>
+  </div>
+
+  <p class="prose">
+    Soren watches a child chase a mechanical bird toy down the street. The child laughs. Real laughter — or something indistinguishable from it.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"Are they human?"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"That depends on what you think human means."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"That's not an answer."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"No. It isn't."</div>
+    <div class="direction">She watches the child with the bird toy. Something crosses her expression — something careful, restrained. Something that looks almost like recognition.</div>
+  </div>
+
+  <div class="section-divider"><div class="section-divider-sym">◆</div></div>
+
+  <div class="scene-header">Scene 015 — Interior — City Archive — Evening</div>
+
+  <p class="prose">
+    Lumi takes him to a part of the city he has never visited — the archive district. A building that presents itself as a public records hall but has not had a visitor logged in eleven years.
+  </p>
+
+  <p class="prose">
+    Inside, behind a maintenance door that opens when Lumi passes her hand through its sensor panel, is a room that does not appear in the city's public maps.
+  </p>
+
+  <div class="visual-note">
+    <span>Visual Direction — Hidden Archive Room</span>
+    Floor-to-ceiling data storage columns. Old. Pre-dome era hardware, kept running through sheer maintenance stubbornness. Screens that display long scrolling logs — biological data, behavioral modeling, memory architecture. The language is clinical. The subject matter is not. These are people. These are the people of the dome, reduced to specifications and build notes and iteration numbers.
+  </div>
+
+  <p class="prose">
+    Soren reads. For a long time, he just reads.
+  </p>
+
+  <p class="prose">
+    He reads about synthetic biological construction. About memory seeding. About personality calibration toward emotional stability. He reads about population targets and generation modeling and the specific challenge of creating authentic emotional responses in manufactured consciousness.
+  </p>
+
+  <p class="prose atmospheric">
+    He reads the word "iteration" more times than he can count. As in: the third iteration of this behavioral model showed more consistent empathy responses. The fourth iteration retained memory seeding more accurately. The seventh iteration achieved the closest approximation to natural human development.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"He built them. All of them. Every person in this city."</div>
+    <div class="direction">His voice is very quiet.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"He rebuilt them. There's a difference, to him. The originals were real. What came after — he would say he preserved what was important and made it stable."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"What did he preserve?"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"The shape of people. The way they talk to each other. The way they love and work and disagree and forgive. He preserved the behavior. He just — made sure it couldn't collapse again."</div>
+  </div>
+
+  <p class="prose">
+    Soren is quiet for a long time.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"What about me?"</div>
+    <div class="direction">He says it carefully. Like the question has weight he is not sure he is ready to carry.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"You're different."</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"Different how."</div>
+  </div>
+
+  <p class="prose">
+    Lumi looks at him. And for the first time since they met — since she appeared on the bridge and began guiding him with answers that always stopped just short of the full truth — she looks uncertain. Not about whether to tell him. About whether telling him will break something that cannot be unbroken.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"He built the others to be stable. To continue. To not feel the weight of what happened."</div>
+    <div class="direction">She pauses.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"He built you to feel everything."</div>
+  </div>
+
+  <p class="prose atmospheric">
+    The archive hums around them. The old screens scroll their patient, endless logs. Outside the city carries on — perfect, designed, calibrated toward continuation.
+  </p>
+
+  <p class="prose">
+    Soren looks at his hands.
+  </p>
+
+  <p class="prose">
+    He has always felt too much for the city he grew up in. He always assumed it was a flaw. Now he wonders if it was a purpose.
+  </p>
+
+  <div class="dialogue-block">
+    <div class="speaker soren">Soren</div>
+    <div class="line">"Why? Why would he do that?"</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"Because he needed someone who could ask that question."</div>
+    <div class="direction">Her voice is gentle. But underneath the gentleness is something else — something that sounds, impossibly, like sadness. Not performed. Real.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker lumi">Lumi</div>
+    <div class="line">"He needed someone who could feel what he couldn't anymore."</div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-logo">Fazzbunny Entertainment™</div>
+  <div class="footer-logo" style="margin-top: 0.5rem; font-size: 10px; letter-spacing: 0.2em;">Story Universe — Game 3 Prototype Document</div>
+  <div class="footer-note">This document is a prototype storybook for internal creative development.<br>Characters, events, and world details are subject to change.</div>
+</div>
+
+</body>
+</html>
